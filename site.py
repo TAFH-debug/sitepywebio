@@ -1,6 +1,9 @@
-from pywebio import *
+import sql
+import ui
+import pywebio
 
-a = input.input("How? ")
+async def main():
+    pywebio.session.run_async(ui.show_reg())
 
-output.put_text(a)
-
+if __name__ == "__main__":
+    pywebio.start_server(main, port = 7000, cdn = False)
