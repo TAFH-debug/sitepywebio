@@ -44,7 +44,7 @@ async def registered(user: User):
 
     user.onJoin(msg_box, users_box)
     
-    task = run_async(user.refresh(msg_box, users_box))
+    task = run_async(user.refresh(msg_box))
 
     while True:
         data = await input.input_group("New message!", [
