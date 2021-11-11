@@ -8,6 +8,8 @@ def put(id, name = 'undefined', password = '101'):
     cursor.execute('INSERT INTO users(name, id, password) VALUES(?, ?, ?)', (name, id, password)) 
     con.commit()
 
+#region debug
+
 def print_all():
     cursor.execute('SELECT * FROM users')
     print(cursor.fetchone())
@@ -15,3 +17,5 @@ def print_all():
 def cmd(commmand):
     cursor.execute(commmand)
     print(cursor.fetchone())
+
+#endregion
