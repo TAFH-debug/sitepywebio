@@ -1,5 +1,6 @@
 from pywebio import *
 import random
+from pywebio.output import OutputPosition
 
 from pywebio.session import run_async
 import sql
@@ -36,10 +37,14 @@ def validate(m: dict):
 
 async def registered(user: User):
     msg_box = output.output("Text")
+    users_box = output.output("Users")
+
     output.put_scrollable(msg_box, height = 300, keep_bottom = True)
-    user.onJoin(msg_box)
+    output.put_column(users_box, position = OutputPosition.TOP)
+
+    user.onJoin(msg_box, users_box)
     
-    task = run_async(user.refresh_messages(msg_box))
+    task = run_async(user.refresh(msg_box, users_box))
 
     while True:
         data = await input.input_group("New message!", [
@@ -52,7 +57,10 @@ async def registered(user: User):
         if data['cmd'] == "Mute":
             if user.admin:
                 muted.append(data['msg'])
-                global_messages.append(("NOTE:", f"{data['msg']} has muted!"))
+                global_messages.append(("📣", f"{data['msg']} has muted by {user.name}"))
+            else:
+                output.put_error("You're not admin!")
+            continue
 
         msg_box.append(output.put_markdown(f"{user.name}: {data['msg']}"))
         global_messages.append((user.name, data["msg"]))
@@ -61,4 +69,4 @@ async def registered(user: User):
 
     output.toast("You're leaved from channel!")
 
-    user.onLeave(msg_box)
+    user.onLeave(msg_box, users_box)

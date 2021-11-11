@@ -16,17 +16,19 @@ class User:
     def unmute(self):
         muted.remove(self.name)
 
-    def onJoin(self, box):
+    def onJoin(self, box, ubox):
         users.append(self)
-        global_messages.append(("NOTE", f"`{self.name}`, has joined to channel."))
+        global_messages.append(("📣", f"`{self.name}`, has joined to channel."))
         box.append(output.put_markdown(f"`{self.name}`, has joined to channel."))
+        ubox.append(self.name)
 
-    def onLeave(self, box):
-        global_messages.append(("NOTE", f"`{self.name}`, has leaved from channel."))
+    def onLeave(self, box, ubox):
+        global_messages.append(("📣", f"`{self.name}`, has leaved from channel."))
         users.remove(self)
         box.append(output.put_markdown(f"`{self.name}`, has leaved from channel."))
+        ubox.remove(self.name)
 
-    async def refresh_messages(self, box):
+    async def refresh(self, box):
         global global_messages
 
         last_index = len(global_messages)
