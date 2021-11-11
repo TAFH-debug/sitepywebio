@@ -36,6 +36,7 @@ def validate(m: dict):
     return None
 
 async def registered(user: User):
+    output.clear()
     msg_box = output.output("Text")
     users_box = output.output("Users")
 
@@ -51,6 +52,10 @@ async def registered(user: User):
             input.input(placeholder = "Text", name = "msg"),
             input.actions(name = "cmd", buttons = ["Send", {"label": "Leave from channel.", "type": "cancel"}, "Mute"]),
         ], validate = validate)
+
+        file = await input.file_upload("Upload file")
+        msg_box.append(output.put_image(file['content']))
+        global_messages.append((user.name, file['content']))
 
         if not data: break
 
